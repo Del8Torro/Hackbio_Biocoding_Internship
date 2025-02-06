@@ -1,0 +1,32 @@
+Team_Asparagine = """[[{"NAME" : "Bamidele",
+"Slack USERNAME" : "Bamidele", 
+"EMAIL" : "bamideleiyoha@gmail.com", 
+"HOBBY" : "Art", 
+"Country" : "UK",
+"DISCIPLINE" : "Biomedical Science", 
+"PPL" : "Python"}],
+
+[{"NAME" : "Pelumi Okunrounmu ", 
+"SLACK USERNAME" : "Akinsete", 
+"EMAIL" : "pelumiokuns@gmail.com", 
+"HOBBY" : "Poetry", 
+"COUNTRY" : "Nigeria ", 
+"DISCIPLINE" : "Molecular Biology", 
+"PPL" : "Python"}],  
+
+[{"NAME" : "Kendra ", 
+"SLACK USERNAME" : "Kendra", 
+"EMAIL" : "kendravedu@gmail.com", 
+"HOBBY" : "Art", 
+"COUNTRY" : "USA ", 
+"DISCIPLINE" :"Molecular Biology", 
+"PPL" : "Python"}],  
+
+[{"NAME" : "Lateefat Shuaib ", 
+"SLACK USERNAME" : "Lateefat ", 
+"EMAIL " : "ayomidelateefat23@gmail.com", 
+"HOBBY " : "Volunteering ", 
+"COUNTRY" : "Nigeria ", 
+"DISCIPLINE" :"Plant Pathology", 
+"PPL" : "Python"}]]"""
+print (Team_Asparagine)
