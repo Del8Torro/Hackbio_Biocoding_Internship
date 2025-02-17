@@ -33,6 +33,28 @@ for x in time :
 """
 ____________________________________________________________
 """
+#To calculate tye time needed to reach 80% of the carrying capacity 
+
+#______________________________________________________________________________________________________________
+time_range= 50
+initial_population = 2
+population_cap = 100
+growth_rate = 1
+def time_for_80(initial_population, population_cap, growth_rate, time_range):
+    population = initial_population  # Initialize population
+    target_growth = 0.8 * population_cap  # 80% X final population size
+    for t in range(time_range):
+        # Apply logistic growth formula here
+        population += growth_rate * population * (1 - population / population_cap)
+        if population >= target_growth:
+            return t  # This function gives the time  when population reaches 80%
+    return None  # If it doesn't reach 80%, then return None output
+percent_80= time_for_80(initial_population, population_cap, growth_rate, time_range)
+final = (f"Time to reach 80% : {percent_80} hours")
+print(final )
+"""
+____________________________________________________________
+"""
 
 #Calculate the Hamming distance between Twitter username and Slack username
 def hamming_distance(T_username, S_username):
