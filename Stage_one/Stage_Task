@@ -1,0 +1,49 @@
+# Translate RNA sequence "AUGCCCAUUGGUCCCGAGUUUACG" into Amino Acid sequence
+codons = {"AUG" :" M", "ACG":"T", "CCC":"P","GGU":"G","AAU":"N","CAG":"Q","UUU":"F","GAG":"V","AGC": "S", "AUU" :"I"}
+#Where M= Methionine, T= Arginine, P = Histidine, G =   Q = Glutamine,F = Phenylalanine,V =Valine, S= Serine I = Isoleucine
+def translate(original):
+    protein = []
+    for i in range(0, len(original), 3): #This sets up the range for the loop, limiting it to 3 indexs
+        codon = original[i:i+3] #this loop sets it up to continue through the sequence in i:i+3 format
+        if codon in codons:
+            protein.append(codons[codon])
+    return ''.join(protein)
+protein = translate("AUGCCCAUUGGUCCCGAGUUUACG")
+print(protein)
+"""
+____________________________________________________________
+"""
+
+#Calculate the Hamming distance between Twitter username and Slack username
+def hamming_distance(T_username, S_username):
+    differences = 0
+    for i in range(len(T_username)): # this sets up the range as the lenth of the twitter username
+        if T_username[i] != S_username[i]: # The loop will run through bothe usernames and compare each position/index to see if its the same letter/figure
+            differences += 1 # if they are different, then1 will be added
+    return differences # Return the total number of differences
+twitter_name = "Wayto_Eden"
+slack_name = "Akinsete"
+# we will now input the original equation we defined, but now we substitue T_usernamefor twitter_name and S_username for slack_name
+distance = hamming_distance(slack_name, twitter_name)
+print(f"The Hamming distance between '{slack_name}' and '{twitter_name}' is: {distance}")
+
+"""
+___________________________________________________________
+"""
+#Simulate a Logistic growth curve
+#Define the paramateres in the formula y = (L/(1 + e**(-k*(x-x0))))
+#L = Bacteria Population size cap (number of cells), x0 = time taken to reach Population halfpoint, k= Population growth rate e= 2.71828 (mathematical constant), x = time in hours
+L = 100
+x0 = 16
+k = 0.1
+e = 2.71828
+time = range (0,50) #time limit for observed Population growth is a period of 50 hours
+for x in time :
+  if x <3: #use if statement to determine the growth rate for when x is less than 3
+    k = 0.098
+  elif x  >44: #use elif statement ti determine growth rate when x is greater than 44
+    k = 0.15
+  else:
+    k = 0.1
+  y = (L/(1 + e**(-k*(x-x0)))) #
+  print(f"value for Y when X is {x}: {y}")  
