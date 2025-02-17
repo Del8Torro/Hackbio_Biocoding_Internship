@@ -48,3 +48,4 @@ for x in time :
   y = (L/(1 + e**(-k*(x-x0)))) #
   print(f"value for Y when X is {x}: {y}")  
 #https://github.com/Akinsete07/Hackbio_Biocoding_Internship/blob/main/Stage_one/Stage_Task
+
