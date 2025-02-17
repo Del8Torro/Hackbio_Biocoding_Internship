@@ -11,23 +11,6 @@ def translate(original):
 protein = translate("AUGCCCAUUGGUCCCGAGUUUACG")
 print(protein)
 """
-____________________________________________________________
-"""
-
-#Calculate the Hamming distance between Twitter username and Slack username
-def hamming_distance(T_username, S_username):
-    differences = 0
-    for i in range(len(T_username)): # this sets up the range as the lenth of the twitter username
-        if T_username[i] != S_username[i]: # The loop will run through bothe usernames and compare each position/index to see if its the same letter/figure
-            differences += 1 # if they are different, then1 will be added
-    return differences # Return the total number of differences
-twitter_name = "Wayto_Eden"
-slack_name = "Akinsete"
-# we will now input the original equation we defined, but now we substitue T_usernamefor twitter_name and S_username for slack_name
-distance = hamming_distance(slack_name, twitter_name)
-print(f"The Hamming distance between '{slack_name}' and '{twitter_name}' is: {distance}")
-
-"""
 ___________________________________________________________
 """
 #Simulate a Logistic growth curve
@@ -46,6 +29,23 @@ for x in time :
   else:
     k = 0.1
   y = (L/(1 + e**(-k*(x-x0)))) #
-  print(f"value for Y when X is {x}: {y}")  
+  print(f"value for Y when X is {x}: {y}")
+"""
+____________________________________________________________
+"""
+
+#Calculate the Hamming distance between Twitter username and Slack username
+def hamming_distance(T_username, S_username):
+    differences = 0
+    for i in range(len(T_username)): # this sets up the range as the lenth of the twitter username
+        if T_username[i] != S_username[i]: # The loop will run through bothe usernames and compare each position/index to see if its the same letter/figure
+            differences += 1 # if they are different, then1 will be added
+    return differences # Return the total number of differences
+twitter_name = "Wayto_Eden"
+slack_name = "Akinsete"
+# we will now input the original equation we defined, but now we substitue T_usernamefor twitter_name and S_username for slack_name
+distance = hamming_distance(slack_name, twitter_name)
+print(f"The Hamming distance between '{slack_name}' and '{twitter_name}' is: {distance}")
+    
 #https://github.com/Akinsete07/Hackbio_Biocoding_Internship/blob/main/Stage_one/Stage_Task
 
