@@ -34,8 +34,6 @@ for x in time :
 ____________________________________________________________
 """
 #To calculate tye time needed to reach 80% of the carrying capacity 
-
-#______________________________________________________________________________________________________________
 time_range= 50
 initial_population = 2
 population_cap = 100
