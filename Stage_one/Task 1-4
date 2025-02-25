@@ -1,1 +1,130 @@
+import pandas as pd
 
+# Load the dataset
+url = "https://gist.githubusercontent.com/stephenturner/806e31fce55a8b7175af/raw/1a507c4c3f9f1baaa3a69187223ff3d3050628d4/results.txt"
+data = pd.read_csv(url, sep="\t")
+
+# Inspect the first few rows
+print(data.head())
+
+# Filter upregulated genes (Log2FC > 1 and p-value < 0.01)
+upregulated_genes = data[(data['log2FoldChange'] > 1) & (data['pvalue'] < 0.01)]
+
+# Filter downregulated genes (Log2FC < -1 and p-value < 0.01)
+downregulated_genes = data[(data['log2FoldChange'] < -1) & (data['pvalue'] < 0.01)]
+
+# Print the number of upregulated and downregulated genes
+print(f"Number of upregulated genes: {len(upregulated_genes)}")
+print(f"Number of downregulated genes: {len(downregulated_genes)}")
+
+# Display the first few rows of each category
+print("\nUpregulated Genes:")
+print(upregulated_genes.head())
+
+print("\nDownregulated Genes:")
+print(downregulated_genes.head())
+"""
+___________________________________________________________________________
+"""
+import pandas as pd
+import numpy as np
+
+# Load the dataset from the URL
+url = "https://gist.githubusercontent.com/stephenturner/806e31fce55a8b7175af/raw/1a507c4c3f9f1baaa3a69187223ff3d3050628d4/results.txt"
+rnaseq_data = pd.read_csv(url, sep="\t")
+
+# Display the structure of the data
+print("Data structure:")
+print(rnaseq_data.info())
+
+# Display the first few rows of the data
+print("\nFirst 5 rows of data:")
+print(rnaseq_data.head())
+
+# Identify upregulated genes (Log2FC > 1 and pvalue < 0.01)
+upregulated_genes = rnaseq_data[(rnaseq_data['log2FoldChange'] > 1) & (rnaseq_data['pvalue'] < 0.01)]
+
+# Identify downregulated genes (Log2FC < -1 and pvalue < 0.01)
+downregulated_genes = rnaseq_data[(rnaseq_data['log2FoldChange'] < -1) & (rnaseq_data['pvalue'] < 0.01)]
+
+# Count of upregulated and downregulated genes
+print(f"\nNumber of upregulated genes: {len(upregulated_genes)}")
+print(f"Number of downregulated genes: {len(downregulated_genes)}")
+
+# Display the upregulated genes
+print("\nUpregulated genes (Log2FC > 1 and pvalue < 0.01):")
+print(upregulated_genes['id'].tolist())
+
+# Display the downregulated genes
+print("\nDownregulated genes (Log2FC < -1 and pvalue < 0.01):")
+print(downregulated_genes['id'].tolist())
+"""
+___________________________________________________________________
+"""
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the dataset
+url = "https://gist.githubusercontent.com/stephenturner/806e31fce55a8b7175af/raw/1a507c4c3f9f1baaa3a69187223ff3d3050628d4/results.txt"
+data = pd.read_csv(url, sep="\t")
+
+# Calculate -log10(p-value) for plotting
+data['-log10(pvalue)'] = -np.log10(data['pvalue'])
+
+# Define gene categories based on Log2FC and p-value thresholds
+def categorize_gene(row):
+    if row['log2FoldChange'] > 1 and row['pvalue'] < 0.01:
+        return 'Upregulated'
+    elif row['log2FoldChange'] < -1 and row['pvalue'] < 0.01:
+        return 'Downregulated'
+    else:
+        return 'Not Significant'
+
+data['Gene Category'] = data.apply(categorize_gene, axis=1)
+
+# Set colors for categories
+colors = {'Upregulated': 'red', 'Downregulated': 'blue', 'Not Significant': 'gray'}
+
+# Create the volcano plot
+plt.figure(figsize=(10, 6))
+sns.scatterplot(
+    data=data, x='log2FoldChange', y='-log10(pvalue)',
+    hue='Gene Category', palette=colors, alpha=0.7, edgecolor=None
+)
+
+# Add threshold lines
+plt.axhline(-np.log10(0.01), color='black', linestyle='--', linewidth=1)  # p-value threshold
+plt.axvline(1, color='black', linestyle='--', linewidth=1)  # Log2FC threshold
+plt.axvline(-1, color='black', linestyle='--', linewidth=1)  # Log2FC threshold
+
+# Labels and title
+plt.xlabel("Log2 Fold Change")
+plt.ylabel("-Log10(p-value)")
+plt.title("Volcano Plot of Differential Gene Expression")
+plt.legend(title="Gene Category")
+plt.show()
+"""
+_________
+"""
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Generate random data
+np.random.seed(0)
+x = np.random.normal(0, 1, 100)
+y = np.random.normal(0, 1, 100)
+
+# Calculate log fold change and p-values
+log_fold_change = np.log2(x / y)
+p_values = -np.log10(np.random.uniform(0, 1, 100))
+
+# Create volcano plot
+plt.scatter(log_fold_change, p_values, color='black', alpha=0.5)
+plt.axhline(y=-np.log10(0.05), color='red', linestyle='--')
+plt.axvline(x=0, color='gray', linestyle='--')
+plt.xlabel('Log Fold Change')
+plt.ylabel('-log10(p-value)')
+plt.title('Volcano Plot')
+plt.show()
