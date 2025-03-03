@@ -1,0 +1,272 @@
+'''
+Team Asparagine1
+Kendra Vilfort (Github: yayamv)
+Lateefat Shuaib (
+Pelumi  Okunrounmu (Github: Akinsete07)
+Damilola Ogungbemi (Github: DamilolaeO)
+2/25/2025
+HackBio Biocoding Internship
+Stage Two Task
+'''
+
+
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+import math
+from scipy import stats
+
+#import and define dataset
+data_source = "https://raw.githubusercontent.com/HackBio-Internship/2025_project_collection/refs/heads/main/Python/Dataset/mcgc.tsv"
+read = pd.read_csv(data_source, sep = '\t') #Read the data from the URL into a pandas DataFrame, using tab as the separator
+
+#Strain 1 line plot
+plt.figure() #Create a new figure for the plot
+sns.lineplot(read, x="time", y="A1", label="WT") #Create a line plot of the data in column A1 vs time, labeled "WT"
+sns.lineplot(read, x="time", y="A2", label="MUT") #Create a line plot of the data in column A2 vs time, labeled "MUT"
+plt.title('Strain 1') #Set the title of the plot
+plt.ylabel('OD600') #Set the y-axis label
+plt.legend() #Show the legend
+
+#Strain 2 line plot
+plt.figure() #Create a new figure for the plot
+sns.lineplot(read, x="time", y="A5", label="WT") #Create a line plot of the data in column A5 vs time, labeled "WT"
+sns.lineplot(read, x="time", y="A6", label="MUT") #Create a line plot of the data in column A6 vs time, labeled "MUT"
+plt.title('Strain 2') #Set the title of the plot
+plt.ylabel('OD600') #Set the y-axis label
+plt.legend() #Show the legend
+
+#Strain 3 line plot
+plt.figure() #Create a new figure for the plot
+sns.lineplot(read, x="time", y="A9", label="WT") #Create a line plot of the data in column A9 vs time, labeled "WT"
+sns.lineplot(read, x="time", y="A10", label="MUT") #Create a line plot of the data in column A10 vs time, labeled "MUT"
+plt.title('Strain 3') #Set the title of the plot
+plt.ylabel('OD600') #Set the y-axis label
+plt.legend() #Show the legend
+
+
+#Define a function to calculate the time to reach carrying capacity
+def time_to_reach_carrying_capacity2(data_column):
+    max_value= read[data_column].max() #Find the maximum value in the specified column
+    initial_value= read[data_column].min() #Find the minimum value in the specified column
+
+    positions_at_max_value = read[data_column] == max_value #Find the positions at which the value is equal to the maximum value
+    first_position_at_max_value = read[positions_at_max_value].index.tolist()[0] #Find the first position at which the value is equal to the maximum value
+    first_time_at_max_value = read.loc[first_position_at_max_value, read.columns[0]] #Find the time at which the value is equal to the maximum value
+
+    growth_rate= math.log(max_value/initial_value)/first_time_at_max_value #Calculate the growth rate
+
+    mid_value = read[data_column].median().tolist() #Find the median value in the specified column
+    position_at_mid_value = (read[data_column] - mid_value).abs().idxmin() #Find the position at which the value is closest to the median value
+    time_at_mid_value = read.loc[position_at_mid_value, read.columns[0]] #Find the time at which the value is closest to the median value
+
+    time_to_carry = time_at_mid_value - (1 / growth_rate) * math.log((max_value - mid_value) / mid_value) #Calculate the time to carrying capacity
+
+    return time_to_carry #Return the time to carrying capacity
+
+# Calculate time to carrying capacity for each strain
+time_MUT1 = time_to_reach_carrying_capacity2("A1")  # Mutant strain 1
+time_WT1 = time_to_reach_carrying_capacity2("A2")  # Wild-type strain 1
+time_MUT2 = time_to_reach_carrying_capacity2("A5")  # Mutant strain 2
+time_WT2 = time_to_reach_carrying_capacity2("A6")  # Wild-type strain 2
+time_MUT3 = time_to_reach_carrying_capacity2("A9")  # Mutant strain 3
+time_WT3 = time_to_reach_carrying_capacity2("A10") # Wild-type strain 3
+
+# Create lists for knockout and wild-type strains
+knockout_times = [time_MUT1, time_MUT2, time_MUT3]
+wildtype_times = [time_WT1, time_WT2, time_WT3]
+MUT_strains = ["MUT1","MUT2","MUT3"]
+WT_strains = ["WT1","WT2","WT3"]
+
+#Scater plot of Time to Reach Carrying Capacity
+plt.figure()
+plt.scatter(MUT_strains, knockout_times) #Create a scatter plot of the time to reach carrying capacity for strain 1 MUT
+plt.scatter(WT_strains, wildtype_times) #Create a scatter plot of the time to reach carrying capacity for strain 1 WT
+plt.xlabel('Strain Type')
+plt.ylabel('Time to Reach Carrying Capacity')
+plt.title('Scatter Plot of Time to Carrying Capacity for Knockout and Wild-Type Strains')
+
+
+#Box plot of Time to Reach Carrying Capacity
+plt.figure()
+plt.boxplot([knockout_times, wildtype_times], tick_labels=['Knockout (MUT)', 'Wild-Type (WT)'])
+plt.title('Time to Reach Carrying Capacity: Knockout vs. Wild-Type Strains')
+plt.xlabel('Strain Type')
+plt.ylabel('Time (minutes)')
+
+# Perform the t-test to determine statistical significance
+t_statistic, p_value = stats.ttest_ind(knockout_times, wildtype_times)
+
+# Output the results
+print(f"T-statistic: {t_statistic}")
+print(f"P-value: {p_value}")
+
+# Interpretation
+if p_value < 0.05:
+    print("The difference in bacterial growth is statistically significant.")
+else:
+    print("The difference in bacterial growth is not statistically significant.")
+
+#Show the plot
+plt.show()
+
+#Observations: Box plots seem to do a better job of visualizing how Wild-type (WT) strains appear to grow faster and reach carrying capacity earlier than mutant (MUT) strains.
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+# Load the dataset
+url = "https://gist.githubusercontent.com/stephenturner/806e31fce55a8b7175af/raw/1a507c4c3f9f1baaa3a69187223ff3d3050628d4/results.txt"
+data = pd.read_csv(url, sep=' ')
+# Clean column names by stripping whitespace
+data.columns = data.columns.str.strip()
+# Calculate -log10(p-value) for plotting
+data['-log10(pvalue)'] = -np.log10(data['pvalue'])
+# Define gene categories based on Log2FC and p-value thresholds
+def categorize_gene(row):
+    if row['log2FoldChange'] > 1 and row['pvalue'] < 0.01:
+        return 'Upregulated'
+    elif row['log2FoldChange'] < -1 and row['pvalue'] < 0.01:
+        return 'Downregulated'
+    else:
+        return 'Not Significant'
+data['Gene Category'] = data.apply(categorize_gene, axis=1)
+# Set colors for categories
+colors = {'Upregulated': 'red', 'Downregulated': 'blue', 'Not Significant': 'gray'}
+# Create the volcano plot
+plt.figure(figsize=(10, 6))
+sns.scatterplot(
+    data=data, x='log2FoldChange', y='-log10(pvalue)',
+    hue='Gene Category', palette=colors, alpha=0.7, edgecolor=None
+)
+# Add threshold lines
+plt.axhline(-np.log10(0.01), color='black', linestyle='--', linewidth=1)  # p-value threshold
+plt.axvline(1, color='black', linestyle='--', linewidth=1)  # Log2FC threshold
+plt.axvline(-1, color='black', linestyle='--', linewidth=1)  # Log2FC threshold
+# Labels and title
+plt.xlabel("Log2 Fold Change")
+plt.ylabel("-Log10(p-value)")
+plt.title("Volcano Plot of Differential Gene Expression")
+plt.legend(title="Gene Category")
+plt.show()
+#Video:https://drive.google.com/drive/folders/1zutVcdOfFRuXEHzUajlgZ3BwhKMItycd
+"""
+_____________________________________________________________________________________
+"""
+import pandas as pd
+# Read the file
+data_source = "https://raw.githubusercontent.com/HackBio-Internship/2025_project_collection/refs/heads/main/Python/Dataset/Pesticide_treatment_data.txt"
+df = pd.read_csv(data_source, sep = "\t")
+df = df.T
+print(df)
+print(df.info)
+df.columns = df.iloc[0]  # Set first row as column names
+df = df[1:].reset_index(drop=True)  # Remove the old header and reset index
+#Calculate the difference in metabolic response (ΔM) between the DMSO treatment from the 24 hours treatment for the wild type and mutants
+#For Wild Type
+df["ΔM_Wild_Type"] = df["WT_pesticide_24h_1"] - df["WT_DMSO_1"]
+df["ΔM_Mutant"] = df["mutant_pesticide_24h_1"] - df["mutant_DMSO_1"]
+print(df[["ΔM_Wild_Type", "ΔM_Mutant"]])
+print(df)
+#To Generate a scatter plot showing the difference for ΔM for WT and Mutants
+import seaborn as sns
+import matplotlib.pyplot as plt
+sns.scatterplot(df, x = "ΔM_Wild_Type", y = "ΔM_Mutant")
+# Fit a line that satisfies a y-intercept of 0 and a slope of 1
+plt.title("Scatter plot of ΔM for Wild Type and Mutants")
+plt.xlabel("ΔM_Wild_Type")
+plt.ylabel("ΔM_Mutant")
+plt.plot(df["ΔM_Wild_Type"], df["ΔM_Wild_Type"], color='red', linestyle='--', label='y=x')
+plt.legend()
+plt.show()
+'''
+Using a residual cut off of your choice
+(calculated a the difference between the fitted line and each point) calculate the residual of each point on the scatter plot
+'''
+# Calculate the residuals
+df["residuals"] = df["ΔM_Mutant"] - df["ΔM_Wild_Type"]
+print(df["residuals"])
+plt.title("Scatter plot of ΔM for Wild Type and Mutants with Residuals")
+plt.xlabel("ΔM_Wild_Type")
+plt.ylabel("ΔM_Mutant")
+plt.plot(df["ΔM_Wild_Type"], df["residuals"], color='green', linestyle='--', label='Residuals')
+plt.show()
+'''
+Color metabolites that fall within +/- n of your residual grey.
+For example, if you have a cut-off of 0.3, color residual values that are within -0.3 and +0.3 grey
+'''
+# Define the cut-off
+cut_off = 0.3
+# Color the residuals
+df["color"] = df["residuals"].apply(lambda x: "grey" if -cut_off <= x <= cut_off else "black")
+# Plot the scatter plot
+sns.scatterplot(data=df, x="ΔM_Wild_Type", y="ΔM_Mutant", hue="color")
+plt.plot(df["ΔM_Wild_Type"], df["ΔM_Wild_Type"], color='red', linestyle='--', label='y=x')
+#Color metabolites that fall outside this range salmon.
+df["color"] = df["residuals"].apply(lambda x: "salmon" if x < -cut_off or x > cut_off else "grey")
+# Plot the scatter plot
+sns.scatterplot(data=df, x="ΔM_Wild_Type", y="ΔM_Mutant", hue="color")
+plt.plot(df["ΔM_Wild_Type"], df["ΔM_Wild_Type"], color='red', label='y=x')
+plt.show()
+#What are these metabolites. How do you explain the trends you see on either direction of the plot?
+df["Metabolites"] = df.index
+print(df)
+#Pick any 6 metabolites that fall outside this range and generate a line plot that spans from their 0h treatment to their 8h and 24hr.
+# Select 6 metabolites
+metabolites = df[df["color"] == "salmon"].sample(6).index
+# Plot the line plot
+for metabolite in metabolites:
+    plt.plot(["0h", "8h", "24h"], df.loc[metabolite, ["WT_DMSO_1", "WT_pesticide_8h_1", "WT_pesticide_24h_1"]], label=metabolite)
+plt.legend()
+plt.show()
+#https://github.com/LateefatSA/hackbio-biocoding-internship/
+#What can you say about the plots you see?
+'''
+The plots show the trend of the metabolites over time. Specifically:
+1. The metabolites that fall outside the residual cut-off range (colored in salmon) exhibit significant changes in metabolic response compared to the wild type.
+2. The line plots for these metabolites indicate how their metabolic response changes from 0h to 8h and 24h treatments.
+3. Metabolites with a positive residual indicate a higher metabolic response in mutants compared to the wild type, while those with a negative residual indicate a lower response.
+4. The trends observed can help identify which metabolites are most affected by the pesticide treatment and may provide insights into the underlying biological mechanisms.
+'''
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns                                           #import data
+sift_df = pd.read_csv("https://raw.githubusercontent.com/HackBio-Internship/public_datasets/main/R/datasets/sift.tsv", sep="\s+")
+foldx_df = pd.read_csv("https://raw.githubusercontent.com/HackBio-Internship/public_datasets/main/R/datasets/foldX.tsv", sep="\s+")
+print(sift_df.columns)
+print(foldx_df.columns)                                             # Create the specific_Protein_aa column
+sift_df["specific_Protein_aa"] = sift_df["Protein"].astype(str) + "_" + sift_df["Amino_Acid"].astype(str)
+foldx_df["specific_Protein_aa"] = foldx_df["Protein"].astype(str) + "_" + foldx_df["Amino_Acid"].astype(str)
+print(sift_df.head())
+print(foldx_df.head())                                                                                                                               # merge the dataframes
+final_df = pd.merge(sift_df, foldx_df, on="specific_Protein_aa", how="inner")
+print(final_df.head())        print(final_df[(final_df["sift_Score"] > 0.05) & (final_df["foldX_Score"] > 2)])                            # Filter for mutations affecting both structure & function
+deleterious_mutations = final_df[
+    (final_df["sift_Score"] < 0.05) & (final_df["foldX_Score"] > 2)
+]
+print(deleterious_mutations.shape)
+print(deleterious_mutations.head())                              # Extract the first letter (original amino acid)
+deleterious_mutations["Original_AA"] = deleterious_mutations["Amino_Acid_x"].str[0]
+print(deleterious_mutations[["Amino_Acid_x", "Original_AA"]].head())                                       # Count occurrences (FREQUENCY) of each amino acid
+amino_acid_counts = deleterious_mutations["Original_AA"].value_counts()
+print(amino_acid_counts)                                                # Frequency table
+amino_acid_freq_table = amino_acid_counts.reset_index()
+amino_acid_freq_table.columns = ["Amino_Acid", "Frequency"]
+  #plotting the graphs
+print(amino_acid_freq_table)                                import matplotlib.pyplot as plt
+import seaborn as sns
+# Barplot
+plt.figure(figsize=(10, 5))
+sns.barplot(x="Amino_Acid", y="Frequency", data=amino_acid_freq_table, hue="Amino_Acid", palette="Set2", legend=False)
+plt.xlabel("Amino Acid")
+plt.ylabel("Frequency")
+plt.title("Frequency of Deleterious Amino Acids")
+plt.show()
+# Pie Chart
+plt.figure(figsize=(7, 7))
+plt.pie(amino_acid_counts, labels=amino_acid_counts.index, autopct="%1.1f%%", colors=sns.color_palette("Set2", len(amino_acid_counts)))
+plt.title("Distribution of Deleterious Amino Acids")
+plt.show()                                        #OBSERVATION: The amino acid Glycine (G) appears most frequently in deleterious mutations. Glycine is unique because it has no side chain, making it highly flexible. A mutation in glycine can disrupt protein folding and stability, leading to severe structural and functional consequences.                      # AA with more than 100 occurrences
+high_occurrence_aa = amino_acid_freq_table[amino_acid_freq_table["Frequency"] > 100]
+print(high_occurrence_aa)
+#
