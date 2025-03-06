@@ -45,3 +45,24 @@ plt.ylabel("-Log10(p-value)")
 plt.title("Volcano Plot of Differential Gene Expression")
 plt.legend(title="Gene Category")
 plt.show()
+upregulated_genes = data[(data['log2FoldChange'] > 1) & (data['pvalue'] < 0.01)]
+downregulated_genes = data[(data['log2FoldChange'] < -1) & (data['pvalue'] < 0.01)]
+# Print the results
+print("Top 5 Upregulated Genes:")
+print(upregulated_genes.head())
+print("Top 5 Downregulated Genes:")
+print(downregulated_genes.head())
+'''
+Funtions of Top 5 Upreguated Genes:
+ EMILIN2 – Involved in cell adhesion, apoptosis, and extracellular matrix organization. Plays a role in cancer progression and immune response.
+ POU3F4 – A transcription factor critical for ear development and hearing functions, associated with X-linked deafness.
+ LOC285954 – A long non-coding RNA (lncRNA) with potential tumor-suppressor functions, though its full biological role remains under investigation.
+ VEPH1 – Thought to be involved in neuronal signaling and brain development, potentially linked to neurodevelopmental disorders.
+ DTHD1 – Gene with unknown specific function, but suspected to play a role in cellular structure or neurological functions.
+Funtions of Top 5 Upreguated Genes:
+ TBX5 – A transcription factor essential for heart and limb development. Mutations are linked to Holt-Oram syndrome (a congenital heart-hand disorder).
+ IFITM1 – Plays a crucial role in antiviral defense, particularly against viruses like influenza, Zika, and coronaviruses.
+ LAMA2 – Encodes Laminin Alpha 2, essential for muscle function and nerve regeneration. Mutations are linked to muscular dystrophy.
+ CAV2 – Involved in cell signaling and caveolae formation, playing a role in lung cancer, inflammation, and endothelial function.
+ TNN – A component of the extracellular matrix, associated with neural development and tissue repair.
+'''  
